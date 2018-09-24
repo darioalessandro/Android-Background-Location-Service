@@ -13,7 +13,7 @@
         android:theme="@style/AppTheme"
         >
 
-        <activity android:name=".feature.main.MainActivity">
+        <activity android:name=".feature.location.LocationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

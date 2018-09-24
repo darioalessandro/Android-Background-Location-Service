@@ -1,6 +1,7 @@
-package com.mlabar.android_background_location_service.feature.main
+package com.mlabar.android_background_location_service.feature.location
 
 import android.app.Activity
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
@@ -13,9 +14,9 @@ import com.mlabar.android_background_location_service.common.receiver.StartServi
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-class MainActivity : Activity(), View.OnClickListener {
+class LocationActivity : Activity(), View.OnClickListener {
 
-    private val TAG = MainActivity::class.java.simpleName
+    private val TAG = LocationActivity::class.java.simpleName
 
     private val REQUEST_CODE_ACCESS_FINE_LOCATION = 1
 
