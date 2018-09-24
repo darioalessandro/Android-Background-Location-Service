@@ -6,14 +6,14 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.view.View
 import com.mlabar.android_background_location_service.R
-import com.mlabar.android_background_location_service.common.receiver.BootCompletedServiceReceiver
+import com.mlabar.android_background_location_service.common.receiver.StartServiceReceiver
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : Activity(), View.OnClickListener {
 
     private val TAG = MainActivity::class.java.simpleName
 
-    private val mBootCompletedServiceReceiver = BootCompletedServiceReceiver()
+    private val mBootCompletedServiceReceiver = StartServiceReceiver()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +27,8 @@ class MainActivity : Activity(), View.OnClickListener {
     override fun onResume() {
         super.onResume()
 
-        registerReceiver(mBootCompletedServiceReceiver, IntentFilter("ACTION_START_SERVICE"))
+        val intentFilter = IntentFilter(StartServiceReceiver.ACTION_START_SERVICE)
+        registerReceiver(mBootCompletedServiceReceiver,intentFilter)
     }
 
     override fun onPause() {
@@ -37,7 +38,7 @@ class MainActivity : Activity(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        val intent = Intent("ACTION_START_SERVICE")
+        val intent = Intent(StartServiceReceiver.ACTION_START_SERVICE)
         sendBroadcast(intent)
     }
 

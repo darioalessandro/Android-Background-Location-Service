@@ -1,4 +1,4 @@
-package com.mlabar.android_background_location_service.feature.location
+package com.mlabar.android_background_location_service.common.location
 
 import android.app.NotificationManager
 import android.content.Context
