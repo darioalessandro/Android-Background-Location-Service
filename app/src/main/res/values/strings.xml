@@ -1,0 +1,7 @@
+<resources>
+
+    <string name="app_name">Background location</string>
+
+    <string name="start_location_service">Start location service</string>
+    <string name="location_unkonw">Start location service</string>
+</resources>
