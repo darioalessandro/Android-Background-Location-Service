@@ -9,6 +9,6 @@ fun Context.checkPermission(permission : String) : Boolean {
     return ActivityCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
 }
 
-fun Context.checkPermissionLocation() : Boolean {
+fun Context.checkPermissionAccessFineLocation() : Boolean {
     return checkPermission(Manifest.permission.ACCESS_FINE_LOCATION)
 }

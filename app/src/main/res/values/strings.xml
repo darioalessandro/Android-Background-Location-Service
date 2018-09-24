@@ -4,4 +4,12 @@
 
     <string name="start_location_service">Start location service</string>
     <string name="location_unkonw">Start location service</string>
+
+    <string name="permission_not_accepted">"Permission not accepted !"</string>
+
+    <string name="google_api_client_connected">Connected to Google API</string>
+    <string name="google_api_client_connection_suspended">Connection suspend to Google API</string>
+    <string name="google_api_client_connection_failed">Connection failed to Google API</string>
+    <string name="google_api_client_already_connected">Already connected to Google API</string>
+
 </resources>
