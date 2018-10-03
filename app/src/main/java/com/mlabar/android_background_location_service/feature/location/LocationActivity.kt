@@ -1,6 +1,5 @@
 package com.mlabar.android_background_location_service.feature.location
 
-import android.app.Activity
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.content.IntentFilter
@@ -10,12 +9,12 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.mlabar.android_background_location_service.R
-import com.mlabar.android_background_location_service.R.id.button_start_service
 import com.mlabar.android_background_location_service.common.extension.checkPermissionAccessFineLocation
 import com.mlabar.android_background_location_service.common.extension.requestPermissionAccessFineLocation
 import com.mlabar.android_background_location_service.common.receiver.StartServiceReceiver
 import com.mlabar.android_background_location_service.common.util.InjectorUtils
-import kotlinx.android.synthetic.main.activity_main.*
+import com.mlabar.android_background_location_service.databinding.ActivityLocationBinding
+import kotlinx.android.synthetic.main.activity_location.*
 
 
 class LocationActivity : AppCompatActivity(), View.OnClickListener {
@@ -26,22 +25,20 @@ class LocationActivity : AppCompatActivity(), View.OnClickListener {
 
     private val mStartCompletedServiceReceiver = StartServiceReceiver()
 
-    private lateinit var mViewModel: LocationViewModel
+    private lateinit var mLocationViewModel: LocationViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_main)
+        val factory = InjectorUtils.locationViewModelFactory()
+        mLocationViewModel = ViewModelProviders.of(this, factory).get(LocationViewModel::class.java)
+
+        DataBindingUtil.setContentView<ActivityLocationBinding>(this, R.layout.activity_location).apply {
+            viewModel = mLocationViewModel
+            setLifecycleOwner(this@LocationActivity)
+        }
 
         button_start_service.setOnClickListener(this)
-
-        val factory = InjectorUtils.locationViewModelFactory()
-        mViewModel = ViewModelProviders.of(this, factory).get(LocationViewModel::class.java)
-
-        /*DataBindingUtil.setContentView<ActivityDetailMovieBinding>(this, R.layout.activity_detail_movie).apply {
-            viewModel = detailMovieViewModel
-            setLifecycleOwner(this@DetailMovieActivity)
-        }*/
     }
 
     override fun onResume() {

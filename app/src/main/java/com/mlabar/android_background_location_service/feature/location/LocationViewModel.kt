@@ -6,7 +6,7 @@ import android.location.Location
 import com.mlabar.android_background_location_service.common.repository.LocationRepository
 
 
-class LocationViewModel() : ViewModel() {
+class LocationViewModel : ViewModel() {
 
     fun getLocation(): LiveData<Location>? {
         return LocationRepository.location

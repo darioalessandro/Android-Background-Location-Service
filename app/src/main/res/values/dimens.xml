@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="zero">0dp</dimen>
+
+    <!-- Material Design -->
+    <dimen name="material_spacing">16dp</dimen>
+
+    <dimen name="material_recycler_horizontal_spacing">20dp</dimen>
+    <dimen name="material_recycler_vertical_spacing">6dp</dimen>
+
+    <dimen name="material_image_simple_width">48dp</dimen>
+    <dimen name="material_image_simple_height">60dp</dimen>
+
+    <dimen name="material_icon_36">36dp</dimen>
+    <dimen name="material_icon_24">24dp</dimen>
+
+    <dimen name="material_font_size_subtitle1">16dp</dimen>
+    <dimen name="material_font_size_caption">12dp</dimen>
+    <dimen name="material_font_size_body1">16dp</dimen>
+
+</resources>
