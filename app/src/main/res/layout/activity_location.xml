@@ -27,18 +27,29 @@
             />
 
         <TextView
+            android:id="@+id/informations"
+            android:layout_width="match_parent"
+            android:textStyle="bold"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/button_start_service"
+            android:layout_marginTop="@dimen/material_spacing"
+            android:text="@string/common_informations"
+            />
+
+        <TextView
             android:id="@+id/latitude"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{viewModel.getLocation().getLatitude()}"
+            android:text="@{String.valueOf(viewModel.getLocation().getLatitude())}"
             app:isVisible="@{viewModel.getLocation() != null}"
-            app:layout_constraintTop_toBottomOf="@+id/button_start_service"
+            app:layout_constraintTop_toBottomOf="@id/informations"
             />
 
         <TextView
             android:id="@+id/longitude"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="@{String.valueOf(viewModel.getLocation().getLongitude())}"
             app:isVisible="@{viewModel.getLocation() != null}"
             app:layout_constraintTop_toBottomOf="@+id/latitude"
             />

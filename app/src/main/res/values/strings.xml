@@ -12,4 +12,6 @@
     <string name="google_api_client_connection_failed">Connection failed to Google API</string>
     <string name="google_api_client_already_connected">Already connected to Google API</string>
 
+    <string name="common_informations">Informations</string>
+
 </resources>
