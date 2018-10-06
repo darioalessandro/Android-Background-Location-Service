@@ -3,6 +3,8 @@
     <string name="app_name">Background location</string>
 
     <string name="start_location_service">Start location service</string>
+    <string name="stop_location_service">Stop location service</string>
+
     <string name="location_unkonw">Start location service</string>
 
     <string name="permission_not_accepted">"Permission not accepted !"</string>
