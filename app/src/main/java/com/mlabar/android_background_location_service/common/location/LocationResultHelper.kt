@@ -8,14 +8,14 @@ import com.mlabar.android_background_location_service.R
 import java.text.DateFormat
 import java.util.*
 
-internal class LocationResultHelper(private val mContext: Context,
-                                    private val mLocations: List<Location>) {
+object LocationResultHelper {
 
-    private val LOCATION_CHANNEL = "LOCATION_CHANNEL"
+    private const val LOCATION_CHANNEL = "LOCATION_CHANNEL"
 
-    private var mNotificationManager: NotificationManager = mContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    fun showNotification(mContext: Context,
+                         mLocations: List<Location>) {
 
-    fun showNotification() {
+        val mNotificationManager: NotificationManager = mContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         val title = "Date : " + DateFormat.getDateTimeInstance().format(Date())
 

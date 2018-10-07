@@ -8,8 +8,8 @@ import com.mlabar.android_background_location_service.common.repository.Location
 
 class LocationViewModel : ViewModel() {
 
-    fun getLocation(): LiveData<Location>? {
-        return LocationRepository.location
-    }
+    fun getLocation(): LiveData<Location> = LocationRepository.location
+
+    fun isLocationServiceStarting(): LiveData<Boolean> = LocationRepository.isServiceStarting
 
 }

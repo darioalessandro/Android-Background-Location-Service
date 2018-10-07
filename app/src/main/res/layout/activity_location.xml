@@ -1,58 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    >
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="com.mlabar.android_background_location_service.R"/>
-        <import type="android.view.View"/>
+
+        <import type="com.mlabar.android_background_location_service.R" />
+
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
-            type="com.mlabar.android_background_location_service.feature.location.LocationViewModel"
-            />
+            type="com.mlabar.android_background_location_service.feature.location.LocationViewModel" />
     </data>
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/material_spacing"
-        >
+        android:padding="@dimen/material_spacing">
 
         <Button
             android:id="@+id/button_start_service"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/start_location_service"
-            />
+            android:text="@{viewModel.isLocationServiceStarting ? @string/stop_location_service : @string/start_location_service}"
+            tools:text="@string/start_location_service" />
 
         <TextView
             android:id="@+id/informations"
             android:layout_width="match_parent"
-            android:textStyle="bold"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/button_start_service"
             android:layout_marginTop="@dimen/material_spacing"
             android:text="@string/common_informations"
-            />
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/material_font_size_body1"
+            android:textStyle="bold"
+            app:isVisible="@{viewModel.isLocationServiceStarting}"
+            app:layout_constraintTop_toBottomOf="@id/button_start_service" />
 
         <TextView
             android:id="@+id/latitude"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/material_spacing"
+            android:gravity="center"
             android:text="@{String.valueOf(viewModel.getLocation().getLatitude())}"
-            app:isVisible="@{viewModel.getLocation() != null}"
+            app:isVisible="@{viewModel.isLocationServiceStarting}"
             app:layout_constraintTop_toBottomOf="@id/informations"
-            />
+            tools:text="37.7578881" />
 
         <TextView
             android:id="@+id/longitude"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:text="@{String.valueOf(viewModel.getLocation().getLongitude())}"
-            app:isVisible="@{viewModel.getLocation() != null}"
+            app:isVisible="@{viewModel.isLocationServiceStarting}"
             app:layout_constraintTop_toBottomOf="@+id/latitude"
-            />
+            tools:text="-122.5780266" />
 
     </android.support.constraint.ConstraintLayout>
 

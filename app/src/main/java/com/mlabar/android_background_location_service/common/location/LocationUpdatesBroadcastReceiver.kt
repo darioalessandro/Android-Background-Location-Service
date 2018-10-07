@@ -4,7 +4,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import com.google.android.gms.common.util.CollectionUtils
 import com.google.android.gms.location.LocationResult
+import com.mlabar.android_background_location_service.common.repository.LocationRepository
 
 class LocationUpdatesBroadcastReceiver : BroadcastReceiver() {
 
@@ -19,10 +21,18 @@ class LocationUpdatesBroadcastReceiver : BroadcastReceiver() {
         Log.d(TAG, "onReceive")
 
         context?.let {
+
             LocationResult.extractResult(intent)?.apply {
-                val locationResultHelper = LocationResultHelper(context, locations)
-                locationResultHelper.showNotification()
+
+                if (!CollectionUtils.isEmpty(locations)) {
+
+                    LocationRepository.location.value = locations.get(0)
+                    LocationResultHelper.showNotification(context, locations)
+
+                }
+
             }
+
         }
 
     }

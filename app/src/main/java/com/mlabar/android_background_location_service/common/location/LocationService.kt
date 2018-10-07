@@ -13,6 +13,7 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.mlabar.android_background_location_service.R
 import com.mlabar.android_background_location_service.common.extension.checkPermissionAccessFineLocation
+import com.mlabar.android_background_location_service.common.repository.LocationRepository
 
 class LocationService : Service(), GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
@@ -53,15 +54,18 @@ class LocationService : Service(), GoogleApiClient.ConnectionCallbacks, GoogleAp
 
     override fun onConnected(p0: Bundle?) {
         Toast.makeText(this, R.string.google_api_client_connected, Toast.LENGTH_LONG).show()
+        LocationRepository.isServiceStarting.value = true
         requestLocationUpdates()
     }
 
     override fun onConnectionSuspended(p0: Int) {
         Toast.makeText(this, R.string.google_api_client_connection_suspended, Toast.LENGTH_LONG).show()
+        LocationRepository.isServiceStarting.value = false
     }
 
     override fun onConnectionFailed(p0: ConnectionResult) {
         Toast.makeText(this, R.string.google_api_client_connection_failed, Toast.LENGTH_LONG).show()
+        LocationRepository.isServiceStarting.value = false
     }
 
     /**
