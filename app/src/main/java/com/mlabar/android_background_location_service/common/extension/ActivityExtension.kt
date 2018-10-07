@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 
+
 fun Activity.requestPermissionAccessFineLocation(requestCode: Int) {
     return requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, requestCode)
 }

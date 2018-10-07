@@ -1,6 +1,8 @@
 package com.mlabar.android_background_location_service.feature.location
 
+import android.app.ActivityManager
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
@@ -10,8 +12,10 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.mlabar.android_background_location_service.R
 import com.mlabar.android_background_location_service.common.extension.checkPermissionAccessFineLocation
+import com.mlabar.android_background_location_service.common.extension.isServiceRunning
 import com.mlabar.android_background_location_service.common.extension.requestPermissionAccessFineLocation
-import com.mlabar.android_background_location_service.common.receiver.StartServiceReceiver
+import com.mlabar.android_background_location_service.common.location.LocationService
+import com.mlabar.android_background_location_service.common.receiver.StartStopServiceReceiver
 import com.mlabar.android_background_location_service.common.util.InjectorUtils
 import com.mlabar.android_background_location_service.databinding.ActivityLocationBinding
 import kotlinx.android.synthetic.main.activity_location.*
@@ -19,11 +23,9 @@ import kotlinx.android.synthetic.main.activity_location.*
 
 class LocationActivity : AppCompatActivity(), View.OnClickListener {
 
-    private val TAG = LocationActivity::class.java.simpleName
-
     private val REQUEST_CODE_ACCESS_FINE_LOCATION = 1
 
-    private val mStartCompletedServiceReceiver = StartServiceReceiver()
+    private val mStartStopServiceReceiver = StartStopServiceReceiver()
 
     private lateinit var mLocationViewModel: LocationViewModel
 
@@ -44,14 +46,17 @@ class LocationActivity : AppCompatActivity(), View.OnClickListener {
     override fun onResume() {
         super.onResume()
 
-        val intentFilter = IntentFilter(StartServiceReceiver.ACTION_START_SERVICE)
-        registerReceiver(mStartCompletedServiceReceiver,intentFilter)
+        val intentStartFilter = IntentFilter(StartStopServiceReceiver.ACTION_START_SERVICE)
+        val intentStopFilter = IntentFilter(StartStopServiceReceiver.ACTION_STOP_SERVICE)
+
+        registerReceiver(mStartStopServiceReceiver, intentStartFilter)
+        registerReceiver(mStartStopServiceReceiver, intentStopFilter)
     }
 
     override fun onPause() {
         super.onPause()
 
-        unregisterReceiver(mStartCompletedServiceReceiver)
+        unregisterReceiver(mStartStopServiceReceiver)
     }
 
     /**
@@ -62,9 +67,14 @@ class LocationActivity : AppCompatActivity(), View.OnClickListener {
         if (!checkPermissionAccessFineLocation()) {
             requestPermissionAccessFineLocation(REQUEST_CODE_ACCESS_FINE_LOCATION)
         } else {
-            val intent = Intent(StartServiceReceiver.ACTION_START_SERVICE)
+            val intent = Intent(StartStopServiceReceiver.ACTION_START_SERVICE)
             sendBroadcast(intent)
         }
+    }
+
+    private fun stopBackgroundLocation() {
+        val intent = Intent(StartStopServiceReceiver.ACTION_STOP_SERVICE)
+        sendBroadcast(intent)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -79,11 +89,16 @@ class LocationActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     /**
-    * Listeners
-    */
+     * Listener
+     */
 
-    override fun onClick(v: View?) {
-        startBackgroundLocation()
+    override fun onClick(p0: View?) {
+        val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        if (activityManager.isServiceRunning(LocationService::class.java)) {
+            stopBackgroundLocation()
+        } else {
+            startBackgroundLocation()
+        }
     }
 
 }

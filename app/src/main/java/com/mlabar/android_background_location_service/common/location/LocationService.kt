@@ -48,6 +48,14 @@ class LocationService : Service(), GoogleApiClient.ConnectionCallbacks, GoogleAp
         return null
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+        mGoogleApiClient?.disconnect()
+        Toast.makeText(this, R.string.google_api_client_disconnected, Toast.LENGTH_LONG).show()
+        LocationRepository.isServiceStarting.value = false
+    }
+
     /**
      * Listeners
      */

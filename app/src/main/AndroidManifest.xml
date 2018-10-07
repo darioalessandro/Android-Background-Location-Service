@@ -21,13 +21,16 @@
         </activity>
 
         <receiver
-            android:name=".common.receiver.StartServiceReceiver"
+            android:name=".common.receiver.StartStopServiceReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="ACTION_START_SERVICE" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="ACTION_STOP_SERVICE" />
             </intent-filter>
         </receiver>
 
