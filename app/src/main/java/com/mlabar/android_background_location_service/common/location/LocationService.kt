@@ -8,20 +8,19 @@ import android.os.IBinder
 import android.util.Log
 import android.widget.Toast
 import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.mlabar.android_background_location_service.R
+import com.mlabar.android_background_location_service.common.MyApplication
 import com.mlabar.android_background_location_service.common.extension.checkPermissionAccessFineLocation
+import com.mlabar.android_background_location_service.common.observer.GoogleApiConnectionObserver
 import com.mlabar.android_background_location_service.common.repository.LocationRepository
 
-class LocationService : Service(), GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+class LocationService : Service(), GoogleApiConnectionObserver {
 
     private val TAG = LocationService::class.java.simpleName
 
     private val UPDATE_INTERVAL = (10 * 1000).toLong()
-
-    private var mGoogleApiClient: GoogleApiClient? = null
 
     private var mLocationRequest: LocationRequest = LocationRequest().apply {
         interval = UPDATE_INTERVAL
@@ -38,8 +37,8 @@ class LocationService : Service(), GoogleApiClient.ConnectionCallbacks, GoogleAp
             Toast.makeText(this, R.string.permission_not_accepted, Toast.LENGTH_LONG).show()
             return START_NOT_STICKY
         } else {
-            connectGoogleApiClient()
-            mGoogleApiClient?.connect()
+            MyApplication.instance.googleApiHelper.addOberver(this)
+            MyApplication.instance.googleApiHelper.connect()
             return START_STICKY
         }
     }
@@ -51,8 +50,8 @@ class LocationService : Service(), GoogleApiClient.ConnectionCallbacks, GoogleAp
     override fun onDestroy() {
         super.onDestroy()
 
-        mGoogleApiClient?.disconnect()
-        Toast.makeText(this, R.string.google_api_client_disconnected, Toast.LENGTH_LONG).show()
+        MyApplication.instance.googleApiHelper.disconnect()
+        MyApplication.instance.googleApiHelper.removeOberver(this)
         LocationRepository.isServiceStarting.value = false
     }
 
@@ -85,24 +84,9 @@ class LocationService : Service(), GoogleApiClient.ConnectionCallbacks, GoogleAp
             Log.d(TAG, "Starting location updates")
             val intent = Intent(this, LocationUpdatesBroadcastReceiver::class.java)
             val pendintIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, pendintIntent)
+            LocationServices.FusedLocationApi.requestLocationUpdates(MyApplication.instance.googleApiHelper.googleApiClient, mLocationRequest, pendintIntent)
         } catch (e: SecurityException) {
             e.printStackTrace()
-        }
-    }
-
-    fun connectGoogleApiClient(){
-        if(mGoogleApiClient == null){
-            mGoogleApiClient = GoogleApiClient.Builder(this)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .build()
-        }
-        if(mGoogleApiClient?.isConnected == false) {
-            mGoogleApiClient?.connect()
-        } else {
-            Toast.makeText(this, R.string.google_api_client_already_connected, Toast.LENGTH_LONG).show()
         }
     }
 
