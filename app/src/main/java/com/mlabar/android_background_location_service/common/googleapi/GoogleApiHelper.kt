@@ -19,7 +19,7 @@ class GoogleApiHelper(context: Context) : GoogleApiClient.ConnectionCallbacks, G
             .addApi(LocationServices.API)
             .build()
 
-    private var googleApiConnectionObservables: MutableList<GoogleApiConnectionObserver> = mutableListOf()
+    private var googleApiConnectionObservers: MutableList<GoogleApiConnectionObserver> = mutableListOf()
 
     private val isConnected: Boolean
         get() = googleApiClient.isConnected
@@ -46,21 +46,21 @@ class GoogleApiHelper(context: Context) : GoogleApiClient.ConnectionCallbacks, G
 
     override fun onConnected(bundle: Bundle?) {
         Log.d(TAG, "onConnected: googleApiClient.connect()")
-        googleApiConnectionObservables.forEach {
+        googleApiConnectionObservers.forEach {
             it.onConnected(bundle)
         }
     }
 
     override fun onConnectionSuspended(i: Int) {
         Log.d(TAG, "onConnectionSuspended: googleApiClient.connect()")
-        googleApiConnectionObservables.forEach {
+        googleApiConnectionObservers.forEach {
             it.onConnectionSuspended(i)
         }
     }
 
     override fun onConnectionFailed(connectionResult: ConnectionResult) {
         Log.d(TAG, "onConnectionFailed: connectionResult = $connectionResult")
-        googleApiConnectionObservables.forEach {
+        googleApiConnectionObservers.forEach {
             it.onConnectionFailed(connectionResult)
         }
     }
@@ -69,16 +69,16 @@ class GoogleApiHelper(context: Context) : GoogleApiClient.ConnectionCallbacks, G
      * Observer
      */
 
-    fun addOberver(googleApiConnectionObservable: GoogleApiConnectionObserver) {
-        if (!googleApiConnectionObservables.contains(googleApiConnectionObservable)) {
-            googleApiConnectionObservables.add(googleApiConnectionObservable)
+    fun addOberver(googleApiConnectionObserver: GoogleApiConnectionObserver) {
+        if (!googleApiConnectionObservers.contains(googleApiConnectionObserver)) {
+            googleApiConnectionObservers.add(googleApiConnectionObserver)
         }
     }
 
-    fun removeOberver(googleApiConnectionObservable: GoogleApiConnectionObserver) {
-        val index = googleApiConnectionObservables.indexOf(googleApiConnectionObservable)
+    fun removeOberver(googleApiConnectionObserver: GoogleApiConnectionObserver) {
+        val index = googleApiConnectionObservers.indexOf(googleApiConnectionObserver)
         if (index != -1) {
-            googleApiConnectionObservables.removeAt(index)
+            googleApiConnectionObservers.removeAt(index)
         }
     }
 
