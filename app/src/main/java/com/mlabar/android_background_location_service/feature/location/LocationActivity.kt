@@ -1,8 +1,6 @@
 package com.mlabar.android_background_location_service.feature.location
 
-import android.app.ActivityManager
 import android.arch.lifecycle.ViewModelProviders
-import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
@@ -12,10 +10,9 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.mlabar.android_background_location_service.R
 import com.mlabar.android_background_location_service.common.extension.checkPermissionAccessFineLocation
-import com.mlabar.android_background_location_service.common.extension.isServiceRunning
 import com.mlabar.android_background_location_service.common.extension.requestPermissionAccessFineLocation
-import com.mlabar.android_background_location_service.common.location.LocationService
 import com.mlabar.android_background_location_service.common.receiver.StartStopServiceReceiver
+import com.mlabar.android_background_location_service.common.repository.LocationRepository
 import com.mlabar.android_background_location_service.common.util.InjectorUtils
 import com.mlabar.android_background_location_service.databinding.ActivityLocationBinding
 import kotlinx.android.synthetic.main.activity_location.*
@@ -60,8 +57,8 @@ class LocationActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     /**
-    * Services
-    */
+     * Services
+     */
 
     private fun startBackgroundLocation() {
         if (!checkPermissionAccessFineLocation()) {
@@ -93,8 +90,7 @@ class LocationActivity : AppCompatActivity(), View.OnClickListener {
      */
 
     override fun onClick(p0: View?) {
-        val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-        if (activityManager.isServiceRunning(LocationService::class.java)) {
+        if (LocationRepository.isServiceStarting.value == true) {
             stopBackgroundLocation()
         } else {
             startBackgroundLocation()

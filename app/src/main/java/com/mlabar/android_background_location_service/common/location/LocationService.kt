@@ -43,9 +43,7 @@ class LocationService : Service(), GoogleApiConnectionObserver {
         }
     }
 
-    override fun onBind(intent: Intent?): IBinder? {
-        return null
-    }
+    override fun onBind(intent: Intent?) = null
 
     override fun onDestroy() {
         super.onDestroy()

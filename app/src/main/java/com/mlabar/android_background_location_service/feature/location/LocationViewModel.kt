@@ -15,8 +15,4 @@ class LocationViewModel : ViewModel() {
 
     fun isLocationServiceStarting(): LiveData<Boolean> = LocationRepository.isServiceStarting
 
-    fun manageService(context: Context) {
-        Toast.makeText(context, R.string.common_google_play_services_enable_button, Toast.LENGTH_LONG).show()
-    }
-
 }
