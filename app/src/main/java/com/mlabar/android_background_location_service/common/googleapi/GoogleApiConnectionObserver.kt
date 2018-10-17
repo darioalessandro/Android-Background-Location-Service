@@ -1,4 +1,4 @@
-package com.mlabar.android_background_location_service.common.observer
+package com.mlabar.android_background_location_service.common.googleapi
 
 import android.os.Bundle
 import com.google.android.gms.common.ConnectionResult

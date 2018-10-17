@@ -13,7 +13,7 @@ import com.google.android.gms.location.LocationServices
 import com.mlabar.android_background_location_service.R
 import com.mlabar.android_background_location_service.common.MyApplication
 import com.mlabar.android_background_location_service.common.extension.checkPermissionAccessFineLocation
-import com.mlabar.android_background_location_service.common.observer.GoogleApiConnectionObserver
+import com.mlabar.android_background_location_service.common.googleapi.GoogleApiConnectionObserver
 import com.mlabar.android_background_location_service.common.repository.LocationRepository
 
 class LocationService : Service(), GoogleApiConnectionObserver {

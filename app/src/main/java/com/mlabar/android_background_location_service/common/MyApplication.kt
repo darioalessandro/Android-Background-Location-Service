@@ -1,7 +1,7 @@
 package com.mlabar.android_background_location_service.common
 
 import android.app.Application
-import com.mlabar.android_background_location_service.common.Helper.GoogleApiHelper
+import com.mlabar.android_background_location_service.common.googleapi.GoogleApiHelper
 
 class MyApplication : Application() {
 

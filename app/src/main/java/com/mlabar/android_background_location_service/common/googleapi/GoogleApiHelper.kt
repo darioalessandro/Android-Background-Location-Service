@@ -1,4 +1,4 @@
-package com.mlabar.android_background_location_service.common.Helper
+package com.mlabar.android_background_location_service.common.googleapi
 
 import android.content.Context
 import android.os.Bundle
@@ -6,7 +6,6 @@ import android.util.Log
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationServices
-import com.mlabar.android_background_location_service.common.observer.GoogleApiConnectionObserver
 
 class GoogleApiHelper(context: Context) : GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
@@ -14,19 +13,15 @@ class GoogleApiHelper(context: Context) : GoogleApiClient.ConnectionCallbacks, G
         private val TAG = GoogleApiHelper::class.java.simpleName
     }
 
-    var googleApiClient: GoogleApiClient
+    var googleApiClient: GoogleApiClient = GoogleApiClient.Builder(context)
+            .addConnectionCallbacks(this)
+            .addOnConnectionFailedListener(this)
+            .addApi(LocationServices.API)
+            .build()
 
     private var googleApiConnectionObservables: MutableList<GoogleApiConnectionObserver> = mutableListOf()
 
-    init {
-        googleApiClient = GoogleApiClient.Builder(context)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build()
-    }
-
-    val isConnected: Boolean
+    private val isConnected: Boolean
         get() = googleApiClient.isConnected
 
     /**
