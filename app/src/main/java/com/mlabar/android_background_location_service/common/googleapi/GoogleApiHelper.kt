@@ -47,19 +47,22 @@ class GoogleApiHelper(private val context: Context) : GoogleApiClient.Connection
      */
 
     override fun onConnected(bundle: Bundle?) {
-        Log.d(TAG, "onConnected: googleApiClient.connect()")
+        Log.d(TAG, "onConnected")
+        Log.d(TAG, "sendBroadcast -> $ACTION_GOOGLE_API_CONNECTED")
         val intent = Intent(ACTION_GOOGLE_API_CONNECTED)
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
     }
 
     override fun onConnectionSuspended(i: Int) {
-        Log.d(TAG, "onConnectionSuspended: googleApiClient.connect()")
+        Log.d(TAG, "onConnectionSuspended")
+        Log.d(TAG, "sendBroadcast -> $ACTION_GOOGLE_API_SUSPENDED")
         val intent = Intent(ACTION_GOOGLE_API_SUSPENDED)
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
     }
 
     override fun onConnectionFailed(connectionResult: ConnectionResult) {
-        Log.d(TAG, "onConnectionFailed: connectionResult = $connectionResult")
+        Log.d(TAG, "onConnectionFailed ($connectionResult) ")
+        Log.d(TAG, "sendBroadcast -> $ACTION_GOOGLE_API_FAILED")
         val intent = Intent(ACTION_GOOGLE_API_FAILED)
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
     }
