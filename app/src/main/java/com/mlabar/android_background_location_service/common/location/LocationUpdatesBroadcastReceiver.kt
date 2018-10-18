@@ -12,10 +12,6 @@ class LocationUpdatesBroadcastReceiver : BroadcastReceiver() {
 
     private val TAG = LocationUpdatesBroadcastReceiver::class.java.simpleName
 
-    companion object {
-        const val ACTION_LOCATION_UPDATES = "ACTION_LOCATION_UPDATES"
-    }
-
     override fun onReceive(context: Context?, intent: Intent?) {
 
         Log.d(TAG, "onReceive")

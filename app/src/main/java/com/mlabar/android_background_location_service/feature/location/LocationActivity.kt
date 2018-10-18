@@ -43,8 +43,8 @@ class LocationActivity : AppCompatActivity(), View.OnClickListener {
     override fun onResume() {
         super.onResume()
 
-        val intentStartFilter = IntentFilter(StartStopServiceReceiver.ACTION_START_SERVICE)
-        val intentStopFilter = IntentFilter(StartStopServiceReceiver.ACTION_STOP_SERVICE)
+        val intentStartFilter = IntentFilter(StartStopServiceReceiver.ACTION_MAIN_SERVICE_START)
+        val intentStopFilter = IntentFilter(StartStopServiceReceiver.ACTION_MAIN_SERVICE_STOP)
 
         registerReceiver(mStartStopServiceReceiver, intentStartFilter)
         registerReceiver(mStartStopServiceReceiver, intentStopFilter)
@@ -64,13 +64,13 @@ class LocationActivity : AppCompatActivity(), View.OnClickListener {
         if (!checkPermissionAccessFineLocation()) {
             requestPermissionAccessFineLocation(REQUEST_CODE_ACCESS_FINE_LOCATION)
         } else {
-            val intent = Intent(StartStopServiceReceiver.ACTION_START_SERVICE)
+            val intent = Intent(StartStopServiceReceiver.ACTION_MAIN_SERVICE_START)
             sendBroadcast(intent)
         }
     }
 
     private fun stopBackgroundLocation() {
-        val intent = Intent(StartStopServiceReceiver.ACTION_STOP_SERVICE)
+        val intent = Intent(StartStopServiceReceiver.ACTION_MAIN_SERVICE_STOP)
         sendBroadcast(intent)
     }
 

@@ -20,7 +20,9 @@ import com.mlabar.android_background_location_service.common.repository.Location
 
 class LocationService : Service() {
 
-    private val TAG = LocationService::class.java.simpleName
+    companion object {
+        private val TAG = LocationService::class.java.simpleName
+    }
 
     private val UPDATE_INTERVAL = (10 * 1000).toLong()
 
@@ -34,10 +36,14 @@ class LocationService : Service() {
      */
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+
         Log.d(TAG, "onStartCommand")
-        if (!checkPermissionAccessFineLocation()) {
+
+        return if (!checkPermissionAccessFineLocation()) {
+
             Toast.makeText(this, R.string.permission_not_accepted, Toast.LENGTH_LONG).show()
-            return START_NOT_STICKY
+            START_NOT_STICKY
+
         } else {
 
             LocalBroadcastManager.getInstance(this).let {
@@ -48,8 +54,9 @@ class LocationService : Service() {
 
             MyApplication.instance.googleApiHelper.connect()
 
-            return START_STICKY
+            START_STICKY
         }
+
     }
 
     override fun onBind(intent: Intent?) = null
@@ -70,20 +77,24 @@ class LocationService : Service() {
 
     private val messageReceiver = object : BroadcastReceiver() {
 
-        override fun onReceive(context: Context, intent: Intent) {
-            when (intent.action) {
-                GoogleApiHelper.ACTION_GOOGLE_API_CONNECTED -> {
-                    Toast.makeText(this@LocationService, R.string.google_api_client_connected, Toast.LENGTH_LONG).show()
-                    LocationRepository.isServiceStarting.value = true
-                    requestLocationUpdates()
-                }
-                GoogleApiHelper.ACTION_GOOGLE_API_SUSPENDED -> {
-                    Toast.makeText(this@LocationService, R.string.google_api_client_connection_suspended, Toast.LENGTH_LONG).show()
-                    LocationRepository.isServiceStarting.value = false
-                }
-                GoogleApiHelper.ACTION_GOOGLE_API_FAILED -> {
-                    Toast.makeText(this@LocationService, R.string.google_api_client_connection_failed, Toast.LENGTH_LONG).show()
-                    LocationRepository.isServiceStarting.value = false
+        override fun onReceive(context: Context?, intent: Intent?) {
+
+            intent?.action.let { action ->
+                when (action) {
+                    GoogleApiHelper.ACTION_GOOGLE_API_CONNECTED -> {
+                        Toast.makeText(this@LocationService, R.string.google_api_client_connected, Toast.LENGTH_LONG).show()
+                        LocationRepository.isServiceStarting.value = true
+                        requestLocationUpdates()
+                    }
+                    GoogleApiHelper.ACTION_GOOGLE_API_SUSPENDED -> {
+                        Toast.makeText(this@LocationService, R.string.google_api_client_connection_suspended, Toast.LENGTH_LONG).show()
+                        LocationRepository.isServiceStarting.value = false
+                    }
+                    GoogleApiHelper.ACTION_GOOGLE_API_FAILED -> {
+                        Toast.makeText(this@LocationService, R.string.google_api_client_connection_failed, Toast.LENGTH_LONG).show()
+                        LocationRepository.isServiceStarting.value = false
+                    }
+                    else -> Log.d(TAG, "Action not identified: $action")
                 }
             }
         }
@@ -96,7 +107,7 @@ class LocationService : Service() {
 
     fun requestLocationUpdates() {
         try {
-            Log.d(TAG, "Starting location updates")
+            Log.d(TAG, "requestLocationUpdates")
             val intent = Intent(this, LocationUpdatesBroadcastReceiver::class.java)
             val pendintIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
             LocationServices.FusedLocationApi.requestLocationUpdates(MyApplication.instance.googleApiHelper.googleApiClient, mLocationRequest, pendintIntent)
