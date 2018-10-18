@@ -2,21 +2,23 @@ package com.mlabar.android_background_location_service.common.location
 
 import android.app.PendingIntent
 import android.app.Service
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
-import android.os.Bundle
-import android.os.IBinder
+import android.content.IntentFilter
+import android.support.v4.content.LocalBroadcastManager
 import android.util.Log
 import android.widget.Toast
-import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.mlabar.android_background_location_service.R
 import com.mlabar.android_background_location_service.common.MyApplication
 import com.mlabar.android_background_location_service.common.extension.checkPermissionAccessFineLocation
-import com.mlabar.android_background_location_service.common.googleapi.GoogleApiConnectionObserver
+import com.mlabar.android_background_location_service.common.googleapi.GoogleApiHelper
 import com.mlabar.android_background_location_service.common.repository.LocationRepository
 
-class LocationService : Service(), GoogleApiConnectionObserver {
+
+class LocationService : Service() {
 
     private val TAG = LocationService::class.java.simpleName
 
@@ -37,8 +39,15 @@ class LocationService : Service(), GoogleApiConnectionObserver {
             Toast.makeText(this, R.string.permission_not_accepted, Toast.LENGTH_LONG).show()
             return START_NOT_STICKY
         } else {
-            MyApplication.instance.googleApiHelper.addOberver(this)
+
+            LocalBroadcastManager.getInstance(this).let {
+                it.registerReceiver(messageReceiver, IntentFilter(GoogleApiHelper.ACTION_GOOGLE_API_CONNECTED))
+                it.registerReceiver(messageReceiver, IntentFilter(GoogleApiHelper.ACTION_GOOGLE_API_SUSPENDED))
+                it.registerReceiver(messageReceiver, IntentFilter(GoogleApiHelper.ACTION_GOOGLE_API_FAILED))
+            }
+
             MyApplication.instance.googleApiHelper.connect()
+
             return START_STICKY
         }
     }
@@ -49,28 +58,42 @@ class LocationService : Service(), GoogleApiConnectionObserver {
         super.onDestroy()
 
         MyApplication.instance.googleApiHelper.disconnect()
-        MyApplication.instance.googleApiHelper.removeOberver(this)
+
+        LocalBroadcastManager.getInstance(this).let {
+            it.unregisterReceiver(messageReceiver)
+        }
+
         LocationRepository.isServiceStarting.value = false
     }
 
     /**
-     * Listeners
+     * Broadcast Manager
      */
 
-    override fun onConnected(p0: Bundle?) {
-        Toast.makeText(this, R.string.google_api_client_connected, Toast.LENGTH_LONG).show()
-        LocationRepository.isServiceStarting.value = true
-        requestLocationUpdates()
-    }
+    private val messageReceiver = object : BroadcastReceiver() {
 
-    override fun onConnectionSuspended(p0: Int) {
-        Toast.makeText(this, R.string.google_api_client_connection_suspended, Toast.LENGTH_LONG).show()
-        LocationRepository.isServiceStarting.value = false
-    }
+        override fun onReceive(context: Context, intent: Intent) {
 
-    override fun onConnectionFailed(p0: ConnectionResult) {
-        Toast.makeText(this, R.string.google_api_client_connection_failed, Toast.LENGTH_LONG).show()
-        LocationRepository.isServiceStarting.value = false
+            when (intent.action) {
+
+                GoogleApiHelper.ACTION_GOOGLE_API_CONNECTED -> {
+                    Toast.makeText(this@LocationService, R.string.google_api_client_connected, Toast.LENGTH_LONG).show()
+                    LocationRepository.isServiceStarting.value = true
+                    requestLocationUpdates()
+                }
+                GoogleApiHelper.ACTION_GOOGLE_API_SUSPENDED -> {
+                    Toast.makeText(this@LocationService, R.string.google_api_client_connection_suspended, Toast.LENGTH_LONG).show()
+                    LocationRepository.isServiceStarting.value = false
+                }
+                GoogleApiHelper.ACTION_GOOGLE_API_FAILED -> {
+                    Toast.makeText(this@LocationService, R.string.google_api_client_connection_failed, Toast.LENGTH_LONG).show()
+                    LocationRepository.isServiceStarting.value = false
+                }
+
+            }
+
+        }
+
     }
 
     /**
