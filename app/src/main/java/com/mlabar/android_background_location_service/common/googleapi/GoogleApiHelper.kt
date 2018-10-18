@@ -26,27 +26,24 @@ class GoogleApiHelper(private val context: Context) : GoogleApiClient.Connection
             .addApi(LocationServices.API)
             .build()
 
-    private val isConnected: Boolean
-        get() = googleApiClient.isConnected
-
     /**
      * Methods
      */
 
     fun connect() {
-        if (!isConnected) {
+        if (!googleApiClient.isConnected) {
             googleApiClient.connect()
         }
     }
 
     fun disconnect() {
-        if (isConnected) {
+        if (googleApiClient.isConnected) {
             googleApiClient.disconnect()
         }
     }
 
     /**
-     * Listener
+     * Listeners
      */
 
     override fun onConnected(bundle: Bundle?) {
