@@ -59,9 +59,7 @@ class LocationService : Service() {
 
         MyApplication.instance.googleApiHelper.disconnect()
 
-        LocalBroadcastManager.getInstance(this).let {
-            it.unregisterReceiver(messageReceiver)
-        }
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReceiver)
 
         LocationRepository.isServiceStarting.value = false
     }
@@ -73,9 +71,7 @@ class LocationService : Service() {
     private val messageReceiver = object : BroadcastReceiver() {
 
         override fun onReceive(context: Context, intent: Intent) {
-
             when (intent.action) {
-
                 GoogleApiHelper.ACTION_GOOGLE_API_CONNECTED -> {
                     Toast.makeText(this@LocationService, R.string.google_api_client_connected, Toast.LENGTH_LONG).show()
                     LocationRepository.isServiceStarting.value = true
@@ -89,9 +85,7 @@ class LocationService : Service() {
                     Toast.makeText(this@LocationService, R.string.google_api_client_connection_failed, Toast.LENGTH_LONG).show()
                     LocationRepository.isServiceStarting.value = false
                 }
-
             }
-
         }
 
     }
